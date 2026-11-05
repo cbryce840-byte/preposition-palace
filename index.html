@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preposition Worksheet Activity (40 Sentences)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        coral: '#FF6B6B',
+                        skyblue: '#4D96FF',
+                        sunny: '#FFD93D',
+                        limegreen: '#6BCB77',
+                        violet: '#9376E0',
+                        darkink: '#2B2D42',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+            min-height: 100vh;
+            overflow-y: auto;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+        }
+        /* Gorgeous CSS Scene Box Styling */
+        .scene-container {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(to bottom, #e0f2fe, #f0fdf4);
+            border: 4px solid #bae6fd;
+            border-radius: 2rem;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 4px 12px rgba(0,0,0,0.06);
+        }
+        .drop-zone {
+            min-width: 120px;
+            border: 3px dashed #4D96FF;
+            background-color: rgba(77, 150, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .drop-zone.filled {
+            border: 3px solid #6BCB77;
+            background-color: rgba(107, 203, 119, 0.2);
+        }
+        .prep-tile {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .prep-tile:hover {
+            transform: scale(1.08);
+        }
+    </style>
+</head>
+<body class="text-darkink antialiased p-4 md:p-8 pb-32">
+
+    <div class="max-w-4xl mx-auto space-y-6">
+        
+        <!-- HEADER -->
+        <header class="glass-card rounded-3xl p-6 shadow-xl flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center space-x-4">
+                <div class="w-14 h-14 bg-skyblue rounded-2xl flex items-center justify-center text-white text-3xl shadow-lg">
+                    <i class="fa-solid fa-compass"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-black text-darkink">
+                        Preposition <span class="text-skyblue">Worksheet</span> (40 Sentences)
+                    </h1>
+                    <p class="text-xs text-gray-600 font-bold">Look at the CSS picture at the top, read the sentence below, and select the correct word tile!</p>
+                </div>
+            </div>
+
+            <!-- Score & Stars -->
+            <div class="flex items-center space-x-3 bg-amber-100 border-2 border-amber-300 px-5 py-2.5 rounded-2xl shadow-md">
+                <i class="fa-solid fa-star text-amber-500 text-2xl animate-spin-slow"></i>
+                <div class="leading-none">
+                    <span id="game-score" class="text-2xl font-black text-amber-800">0</span>
+                    <span class="block text-[10px] font-extrabold text-amber-600 uppercase">Completed (0 / 40)</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN STAGE -->
+        <div class="glass-card rounded-3xl p-6 md:p-10 shadow-2xl border-4 border-skyblue/30 space-y-8 bg-gradient-to-b from-white to-sky-50 text-center">
+            
+            <!-- Instruction Prompt & Listen Button -->
+            <div class="flex items-center justify-between bg-indigo-900 text-white rounded-3xl p-5 shadow-lg">
+                <div class="text-left">
+                    <span class="text-xs font-extrabold uppercase px-3 py-1 bg-skyblue text-white rounded-full">Sentence (<span id="quest-counter">1</span> / 40)</span>
+                    <h2 class="text-xl md:text-2xl font-black mt-1">Look at the picture and fill in the blank!</h2>
+                </div>
+                <button onclick="speakInstruction()" class="bg-amber-400 hover:bg-amber-500 text-darkink font-black py-2.5 px-6 rounded-2xl shadow-md flex items-center space-x-2 transition transform active:scale-95 shrink-0">
+                    <i class="fa-solid fa-volume-high text-lg"></i>
+                    <span>Listen</span>
+                </button>
+            </div>
+
+            <!-- Worksheet Question Card (CSS Picture at Top, Sentence Below) -->
+            <div class="bg-white border-4 border-indigo-100 rounded-3xl p-6 md:p-8 shadow-xl space-y-6">
+                
+                <!-- 1. CSS Illustrated Picture at the Top -->
+                <div class="space-y-2">
+                    <span class="text-xs font-black uppercase text-gray-400 tracking-wider">Positional CSS Picture Illustration:</span>
+                    <div id="css-scene-box" class="scene-container">
+                        <!-- Dynamically rendered CSS scene -->
+                    </div>
+                </div>
+
+                <!-- 2. Sentence Below the Picture -->
+                <div class="pt-2 border-t border-gray-100 flex flex-col items-center justify-center space-y-3">
+                    <p class="text-xs font-black uppercase text-gray-400 tracking-wider">Complete the Sentence:</p>
+                    <div id="sentence-display" class="text-2xl md:text-3xl font-black text-darkink flex flex-wrap items-center justify-center gap-3">
+                        <!-- Rendered dynamically -->
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Floating Preposition Word Bank Tiles -->
+            <div class="space-y-3">
+                <p class="text-xs font-black uppercase text-gray-600 tracking-wider">👇 Tap or Drag a Preposition Tile Below 👇</p>
+                <div id="tiles-container" class="flex flex-wrap items-center justify-center gap-4 py-3">
+                    <!-- Rendered dynamically -->
+                </div>
+            </div>
+
+            <!-- Feedback Toast -->
+            <div id="game-feedback" class="hidden p-4 rounded-2xl text-center font-black text-lg flex items-center justify-center space-x-3 shadow-md animate-bounce">
+                <!-- Dynamic feedback -->
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="flex items-center justify-between pt-4">
+                <button onclick="prevQuest()" class="bg-gray-200 hover:bg-gray-300 text-darkink font-bold text-base py-3 px-6 rounded-2xl transition">
+                    <i class="fa-solid fa-arrow-left mr-2"></i> Previous
+                </button>
+                <button onclick="nextQuest()" class="bg-skyblue hover:bg-blue-600 text-white font-black text-xl py-3.5 px-10 rounded-2xl shadow-xl transition transform active:scale-95 flex items-center space-x-3">
+                    <span>Next Sentence</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- SCRIPT LOGIC (40 DYNAMIC PREPOSITION SENTENCES) -->
+    <script>
+        const BASE_SCENES = [
+            {
+                subject: "The cat",
+                object: "the table",
+                correct: "on",
+                options: ["on", "under", "behind"],
+                sceneHtml: `
+                    <div class="relative w-full h-full flex items-center justify-center">
+                        <div class="absolute bottom-6 w-52 h-5 bg-amber-700 rounded-md shadow flex justify-between px-4">
+                            <div class="w-2 h-16 bg-amber-900 mt-5"></div>
+                            <div class="w-2 h-16 bg-amber-900 mt-5"></div>
+                        </div>
+                        <div class="absolute bottom-11 flex flex-col items-center">
+                            <span class="text-5xl animate-bounce-gentle">🐱</span>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                subject: "The dog",
+                object: "the bed",
+                correct: "under",
+                options: ["under", "on", "beside"],
+                sceneHtml: `
+                    <div class="relative w-full h-full flex items-center justify-center">
+                        <div class="absolute bottom-6 w-56 h-16 bg-indigo-200 rounded-lg shadow border-2 border-indigo-300 flex items-start p-2">
+                            <div class="w-12 h-8 bg-white rounded shadow-sm"></div>
+                        </div>
+                        <div class="absolute bottom-6 flex flex-col items-center">
+                            <span class="text-5xl">🐶</span>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                subject: "The ball",
+                object: "the chair",
+                correct: "behind",
+                options: ["behind", "in", "on"],
+                sceneHtml: `
+                    <div class="relative w-full h-full flex items-center justify-center">
+                        <div class="absolute bottom-7 left-1/2 -translate-x-1/2">
+                            <span class="text-4xl">⚽</span>
+                        </div>
+                        <div class="absolute bottom-6 flex flex-col items-center z-10">
+                            <div class="w-16 h-16 bg-emerald-600 rounded-t-xl border-2 border-emerald-700"></div>
+                            <div class="w-3 h-10 bg-emerald-800"></div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                subject: "The bird",
+                object: "the tree",
+                correct: "above",
+                options: ["above", "under", "in"],
+                sceneHtml: `
+                    <div class="relative w-full h-full flex items-center justify-center">
+                        <div class="absolute top-4 left-1/2 -translate-x-6">
+                            <span class="text-4xl animate-bounce">🐦</span>
+                        </div>
+                        <div class="absolute bottom-4 flex flex-col items-center">
+                            <div class="w-28 h-28 bg-emerald-500 rounded-full shadow"></div>
+                            <div class="w-5 h-12 bg-amber-800 -mt-2"></div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                subject: "The rabbit",
+                object: "the box",
+                correct: "inside",
+                options: ["inside", "on", "under"],
+                sceneHtml: `
+                    <div class="relative w-full h-full flex items-center justify-center">
+                        <div class="absolute bottom-8 flex flex-col items-center">
+                            <span class="text-5xl absolute -top-5 z-10">🐰</span>
+                            <div class="w-28 h-18 bg-amber-600 rounded-lg shadow-md border-2 border-amber-800 flex items-center justify-center text-amber-200 font-black text-lg">BOX</div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                subject: "The bicycle",
+                object: "the wall",
+                correct: "beside",
+                options: ["beside", "in", "above"],
+                sceneHtml: `
+                    <div class="relative w-full h-full flex items-center justify-center">
+                        <div class="absolute right-12 bottom-6 w-16 h-32 bg-stone-400 rounded-t-lg shadow border border-stone-500"></div>
+                        <div class="absolute bottom-6 left-16">
+                            <span class="text-6xl">🚲</span>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                subject: "The flowers",
+                object: "the fence",
+                correct: "in front of",
+                options: ["in front of", "behind", "under"],
+                sceneHtml: `
+                    <div class="relative w-full h-full flex items-center justify-center">
+                        <div class="absolute bottom-8 w-52 h-12 bg-amber-200 border-t-4 border-amber-700 flex justify-around items-end">
+                            <div class="w-2 h-14 bg-amber-700"></div>
+                            <div class="w-2 h-14 bg-amber-700"></div>
+                            <div class="w-2 h-14 bg-amber-700"></div>
+                        </div>
+                        <div class="absolute bottom-6 flex space-x-3 z-10">
+                            <span class="text-4xl">🌷</span>
+                            <span class="text-4xl">🌸</span>
+                            <span class="text-4xl">🌷</span>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                subject: "The shoes",
+                object: "the door",
+                correct: "near",
+                options: ["near", "on", "above"],
+                sceneHtml: `
+                    <div class="relative w-full h-full flex items-center justify-center">
+                        <div class="absolute bottom-6 w-24 h-36 bg-blue-600 rounded-t-xl border-2 border-blue-800 flex items-center justify-end pr-3">
+                            <div class="w-3.5 h-3.5 bg-amber-400 rounded-full"></div>
+                        </div>
+                        <div class="absolute bottom-6 left-24">
+                            <span class="text-4xl">👟👟</span>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                subject: "The puppy",
+                object: "the chairs",
+                correct: "between",
+                options: ["between", "on", "under"],
+                sceneHtml: `
+                    <div class="relative w-full h-full flex items-center justify-center">
+                        <div class="absolute bottom-6 left-16 flex flex-col items-center">
+                            <div class="w-12 h-12 bg-amber-500 rounded-t-lg"></div>
+                            <div class="w-1.5 h-10 bg-amber-700"></div>
+                        </div>
+                        <div class="absolute bottom-6">
+                            <span class="text-5xl">🐶</span>
+                        </div>
+                        <div class="absolute bottom-6 right-16 flex flex-col items-center">
+                            <div class="w-12 h-12 bg-amber-500 rounded-t-lg"></div>
+                            <div class="w-1.5 h-10 bg-amber-700"></div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                subject: "The kite",
+                object: "the house",
+                correct: "over",
+                options: ["over", "in", "under"],
+                sceneHtml: `
+                    <div class="relative w-full h-full flex items-center justify-center">
+                        <div class="absolute top-4 right-20">
+                            <span class="text-4xl">🪁</span>
+                        </div>
+                        <div class="absolute bottom-6 flex flex-col items-center">
+                            <div class="w-0 h-0 border-l-[40px] border-l-transparent border-r-[40px] border-r-transparent border-b-[35px] border-b-rose-600"></div>
+                            <div class="w-20 h-20 bg-amber-100 border-2 border-amber-300"></div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                subject: "The apple",
+                object: "the box",
+                correct: "on",
+                options: ["on", "under", "behind"],
+                sceneHtml: `
+                    <div class="relative w-full h-full flex items-center justify-center">
+                        <div class="absolute bottom-6 w-28 h-20 bg-amber-700 rounded shadow flex items-center justify-center text-white font-black text-lg">BOX</div>
+                        <div class="absolute bottom-26">
+                            <span class="text-4xl">🍎</span>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                subject: "The doll",
+                object: "the car",
+                correct: "in",
+                options: ["in", "on", "under"],
+                sceneHtml: `
+                    <div class="relative w-full h-full flex items-center justify-center">
+                        <div class="absolute bottom-6 w-40 h-16 bg-rose-500 rounded-full shadow flex items-center justify-center">
+                            <span class="text-4xl absolute -top-5">🪆</span>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                subject: "The boy",
+                object: "the tree",
+                correct: "behind",
+                options: ["behind", "on", "next to"],
+                sceneHtml: `
+                    <div class="relative w-full h-full flex items-center justify-center">
+                        <div class="absolute bottom-6 left-1/2 -translate-x-1/2">
+                            <span class="text-5xl">👦</span>
+                        </div>
+                        <div class="absolute bottom-4 flex flex-col items-center z-10">
+                            <div class="w-28 h-28 bg-emerald-600 rounded-full shadow opacity-90"></div>
+                            <div class="w-5 h-12 bg-amber-800 -mt-2"></div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                subject: "The mouse",
+                object: "the chair",
+                correct: "under",
+                options: ["under", "on", "beside"],
+                sceneHtml: `
+                    <div class="relative w-full h-full flex items-center justify-center">
+                        <div class="absolute bottom-6 flex flex-col items-center z-10">
+                            <div class="w-20 h-16 bg-indigo-500 rounded-t-xl"></div>
+                            <div class="w-2 h-12 bg-indigo-700"></div>
+                        </div>
+                        <div class="absolute bottom-6 left-28">
+                            <span class="text-4xl">🐭</span>
+                        </div>
+                    </div>
+                `
+            }
+        ];
+
+        // Generate exactly 40 unique quests by cycling & varying options
+        const PREP_QUESTS = [];
+        for (let i = 0; i < 40; i++) {
+            const base = BASE_SCENES[i % BASE_SCENES.length];
+            PREP_QUESTS.push({
+                id: i + 1,
+                subject: base.subject,
+                object: base.object,
+                correct: base.correct,
+                options: shuffleArray([...base.options]),
+                sceneHtml: base.sceneHtml,
+                speakText: `${base.subject} is ${base.correct} ${base.object}.`
+            });
+        }
+
+        let currentQuestIndex = 0;
+        let score = 0;
+        const solvedSet = new Set();
+        const synth = window.speechSynthesis;
+
+        const PRAISE_VARIATIONS = [
+            "Fantastic job!",
+            "Super work!",
+            "You got it right!",
+            "Awesome!",
+            "Brilliant thinking!",
+            "Way to go!",
+            "Good job, Dylan!"
+        ];
+
+        function getRandomPraise() {
+            return PRAISE_VARIATIONS[Math.floor(Math.random() * PRAISE_VARIATIONS.length)];
+        }
+
+        function speakText(text) {
+            if (!synth) return;
+            synth.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 0.95;
+            utterance.pitch = 1.25;
+            synth.speak(utterance);
+        }
+
+        function speakInstruction() {
+            const q = PREP_QUESTS[currentQuestIndex];
+            speakText(q.speakText);
+        }
+
+        function loadQuest() {
+            const q = PREP_QUESTS[currentQuestIndex];
+            const isDone = solvedSet.has(q.id);
+
+            document.getElementById('quest-counter').innerText = q.id;
+            document.getElementById('css-scene-box').innerHTML = q.sceneHtml;
+
+            // Sentence with drop zone
+            const sentenceBox = document.getElementById('sentence-display');
+            if (isDone) {
+                sentenceBox.innerHTML = `
+                    <span>${q.subject} is</span>
+                    <span class="px-5 py-2.5 bg-emerald-100 text-emerald-800 rounded-2xl border-2 border-emerald-300 font-black">${q.correct}</span>
+                    <span>${q.object}.</span>
+                `;
+            } else {
+                sentenceBox.innerHTML = `
+                    <span>${q.subject} is</span>
+                    <div id="drop-slot" 
+                         ondragover="allowDrop(event)" 
+                         ondrop="dropTile(event, '${q.correct}')"
+                         onclick="clickDropSlot('${q.correct}')"
+                         class="drop-zone inline-flex items-center justify-center px-5 py-2.5 rounded-2xl text-skyblue font-black shadow-inner cursor-pointer">
+                        ...
+                    </div>
+                    <span>${q.object}.</span>
+                `;
+            }
+
+            renderTiles(q.options, isDone);
+
+            const feedback = document.getElementById('game-feedback');
+            if (feedback) feedback.classList.add('hidden');
+            speakInstruction();
+        }
+
+        function renderTiles(options, isDone) {
+            const container = document.getElementById('tiles-container');
+            if (isDone) {
+                container.innerHTML = `<span class="text-sm font-bold text-emerald-600 bg-emerald-50 px-5 py-2.5 rounded-xl">✓ Completed! Click Next Sentence below.</span>`;
+                return;
+            }
+
+            container.innerHTML = options.map(opt => `
+                <div draggable="true" 
+                     ondragstart="dragTile(event, '${opt}')"
+                     onclick="selectTile('${opt}')"
+                     class="prep-tile bg-gradient-to-r from-coral to-pink-500 text-white font-black text-xl px-7 py-3.5 rounded-2xl shadow-lg border-2 border-white">
+                    ${opt}
+                </div>
+            `).join('');
+        }
+
+        let draggedTileVal = null;
+
+        function dragTile(ev, val) {
+            draggedTileVal = val;
+            ev.dataTransfer.setData("text/plain", val);
+        }
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function dropTile(ev, correctVal) {
+            ev.preventDefault();
+            const val = ev.dataTransfer.getData("text/plain") || draggedTileVal;
+            checkAnswer(val, correctVal);
+        }
+
+        function selectTile(val) {
+            const q = PREP_QUESTS[currentQuestIndex];
+            if (solvedSet.has(q.id)) return;
+            checkAnswer(val, q.correct);
+        }
+
+        function clickDropSlot(correctVal) {
+            const q = PREP_QUESTS[currentQuestIndex];
+            if (solvedSet.has(q.id)) {
+                speakText(`Correct! The preposition is ${correctVal}.`);
+            }
+        }
+
+        function checkAnswer(chosenVal, correctVal) {
+            const q = PREP_QUESTS[currentQuestIndex];
+            if (solvedSet.has(q.id)) return;
+            const slot = document.getElementById('drop-slot');
+
+            if (chosenVal === correctVal) {
+                solvedSet.add(q.id);
+                slot.innerText = chosenVal;
+                slot.classList.add('filled', 'animate-bounce');
+                slot.classList.remove('drop-zone');
+
+                score = solvedSet.size;
+                document.getElementById('game-score').innerText = score;
+                document.querySelector('.leading-none span:last-child').innerText = `Completed (${score} / 40)`;
+
+                const praise = getRandomPraise();
+                const feedback = document.getElementById('game-feedback');
+                feedback.classList.remove('hidden');
+                feedback.classList.add('bg-emerald-100', 'text-emerald-800');
+                feedback.innerHTML = `<i class="fa-solid fa-star text-amber-500 text-2xl"></i> <span>${praise} The correct preposition is "${chosenVal}"! ⭐</span>`;
+
+                if (typeof confetti === 'function') {
+                    confetti({ particleCount: 70, spread: 70, origin: { y: 0.6 } });
+                }
+
+                speakText(`${praise} The answer is ${chosenVal}!`);
+                setTimeout(() => {
+                    renderTiles(q.options, true);
+                }, 1200);
+
+            } else {
+                slot.innerText = chosenVal;
+                slot.classList.add('bg-rose-500', 'text-white', 'animate-shake');
+                speakText(`Not quite ${chosenVal}! Try another preposition tile.`);
+
+                setTimeout(() => {
+                    if (!solvedSet.has(q.id)) {
+                        slot.innerText = "...";
+                        slot.classList.remove('bg-rose-500', 'text-white', 'animate-shake');
+                    }
+                }, 1000);
+            }
+        }
+
+        function nextQuest() {
+            currentQuestIndex = (currentQuestIndex + 1) % PREP_QUESTS.length;
+            loadQuest();
+        }
+
+        function prevQuest() {
+            currentQuestIndex = (currentQuestIndex - 1 + PREP_QUESTS.length) % PREP_QUESTS.length;
+            loadQuest();
+        }
+
+        function shuffleArray(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        window.onload = function() {
+            loadQuest();
+        };
+    </script>
+</body>
+</html>
+```eof
